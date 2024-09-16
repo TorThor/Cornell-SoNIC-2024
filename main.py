@@ -1,8 +1,9 @@
 import os
 import glob
 import cv2
-from imgPro import imgPro
 import matplotlib.pyplot as plt
+from imgPro import imgPro
+from whiteBalance import whiteBalance
 
 # Useful function for finding path to an image given img_name and path from local root directory
 def photoFinder(img_name, path):
@@ -26,6 +27,7 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 """
 
+wb_img = whiteBalance(image).wbCorrection()
 upscale_img = imgPro(image).upscaler()
 denoise_img = imgPro(image).denoise()
 clahe_img = imgPro(image).clahe()
@@ -52,6 +54,10 @@ plt.imshow(cv2.cvtColor(clahe_img, cv2.COLOR_BGR2RGB))
 plt.subplot(2, 3, 5)
 plt.title("Gaussian Blur")
 plt.imshow(cv2.cvtColor(guassianBlur_img, cv2.COLOR_BGR2RGB))
+
+plt.subplot(2, 3, 6)
+plt.title("wb (for depthEstimator, applied separately)")
+plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
 plt.tight_layout()
 plt.show()
