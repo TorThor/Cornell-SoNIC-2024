@@ -2,8 +2,9 @@ import os
 import glob
 import cv2
 from imgPro import imgPro
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
+# Useful function for finding path to an image given img_name and path from local root directory
 def photoFinder(img_name, path):
     root_dir = os.path.dirname(os.path.abspath(__file__))
     allowed_extensions = ['.JPG', '.jpeg', '.jpg', '.png', '.PNG']
@@ -16,6 +17,7 @@ def photoFinder(img_name, path):
             break
     return image_path
 
+# Image name to be processed in arg1 (change later to asking in terminal from user)
 image_path = photoFinder("nyc_traffic", "preProImg")
 image = cv2.imread(image_path)
 """
@@ -24,11 +26,10 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 """
 
-"""
-upscale_img = imgPro.upscaler(image)
-denoise_img = imgPro.denoise(image)
-clahe_img = imgPro.clahe(image)
-guassianBlur_img = imgPro.gaussian_blur(image)
+upscale_img = imgPro(image).upscaler()
+denoise_img = imgPro(image).denoise()
+clahe_img = imgPro(image).clahe()
+guassianBlur_img = imgPro(image).gaussian_blur()
 
 plt.figure(figsize=(15, 10))
 
@@ -54,4 +55,3 @@ plt.imshow(cv2.cvtColor(guassianBlur_img, cv2.COLOR_BGR2RGB))
 
 plt.tight_layout()
 plt.show()
-"""

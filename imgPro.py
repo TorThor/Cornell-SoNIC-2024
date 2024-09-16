@@ -11,8 +11,7 @@ class imgPro:
 
     def denoise(self):
         noise_std = np.std(self.upscaler())
-        h = noise_std / 4
-        denoised_img = cv2.fastNlMeansDenoising(noise_std, None, h, 7, 21)
+        denoised_img = cv2.fastNlMeansDenoisingColored(self.image, None, noise_std / 4, 7, 21)
         return denoised_img
     
     def clahe(self):
@@ -25,5 +24,5 @@ class imgPro:
         return bgr_clahe
     
     def gaussian_blur(self):
-        blurred_img = cv2.GaussianBlur(self.clache(), (5, 5), 0)
+        blurred_img = cv2.GaussianBlur(self.clahe(), (5, 5), 0)
         return blurred_img
