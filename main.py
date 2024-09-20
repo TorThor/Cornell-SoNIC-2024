@@ -1,38 +1,26 @@
-import os
-import glob
 import cv2
 import matplotlib.pyplot as plt
+from imgData import imgData
 from imgPro import imgPro
 from whiteBalance import whiteBalance
 
-# Useful function for finding path to an image given img_name and path from local root directory
-def photoFinder(img_name, path):
-    root_dir = os.path.dirname(os.path.abspath(__file__))
-    allowed_extensions = ['.JPG', '.jpeg', '.jpg', '.png', '.PNG']
-    image_path = None
-
-    for ext in allowed_extensions:
-        files = glob.glob(os.path.join(root_dir, path, img_name + ext))
-        if files:
-            image_path = files[0]
-            break
-    return image_path
-
-# Image name to be processed in arg1 (change later to asking in terminal from user)
-image_path = photoFinder("nyc_traffic", "preProImg")
+# Setup image variables
+image_name = input("Name of image: ")
+image_path = imgData(image_name, "preProImg").photoFinder()
 image = cv2.imread(image_path)
-"""
-cv2.imshow("window_name", image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-"""
 
-wb_img = whiteBalance(image).wbCorrection()
+# Create processed imgs by calling class methods and save them to proImg
 upscale_img = imgPro(image).upscaler()
 denoise_img = imgPro(image).denoise()
 clahe_img = imgPro(image).clahe()
-guassianBlur_img = imgPro(image).gaussian_blur()
+gaussianBlur_img = imgPro(image).gaussian_blur()
+wb_img = whiteBalance(image).wbCorrection()
 
+# Save gaussianBlur_img & wb_img
+imgData(image_name, "proImg").photoSaver("_wb", wb_img)
+imgData(image_name, "proImg").photoSaver("_gaussianBlur", gaussianBlur_img)
+
+# Display imgs for fun ;), though only gaussianBlur_img and wb_img used for threatsLLaVA and depthEstimator
 plt.figure(figsize=(15, 10))
 
 plt.subplot(2, 3, 1)
@@ -53,7 +41,7 @@ plt.imshow(cv2.cvtColor(clahe_img, cv2.COLOR_BGR2RGB))
 
 plt.subplot(2, 3, 5)
 plt.title("Gaussian Blur")
-plt.imshow(cv2.cvtColor(guassianBlur_img, cv2.COLOR_BGR2RGB))
+plt.imshow(cv2.cvtColor(gaussianBlur_img, cv2.COLOR_BGR2RGB))
 
 plt.subplot(2, 3, 6)
 plt.title("wb (for depthEstimator, applied separately)")
